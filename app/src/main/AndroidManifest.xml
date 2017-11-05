@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--<uses-sdk android:minSdkVersion="14" />  TODO REMOVE THIS IF UNNCESSARY-->
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+        <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
         <activity android:name=".Activity_Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
