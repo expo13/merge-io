@@ -1,5 +1,7 @@
 package com.expotek.mn.basic;
 
+import com.expotek.mn.math.Point;
+
 import java.util.List;
 
 public class Vector {

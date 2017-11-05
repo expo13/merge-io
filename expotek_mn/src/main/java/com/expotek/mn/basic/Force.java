@@ -6,7 +6,11 @@ import java.util.List;
 public class Force {
 
     private Vector vector;
-    private int newtons;
+    private double newtons;
+
+    public Force(Vector v) {
+        this.vector=v;
+    }
 
     public Force(Mass mass, Acceleration acceleration, Vector vector){
         newtons = mass.getKilogram() * acceleration.getMs2();
@@ -21,7 +25,7 @@ public class Force {
         this.vector = vector;
     }
 
-    public int getNewtons() {
+    public double getNewtons() {
         return newtons;
     }
 
@@ -29,7 +33,11 @@ public class Force {
         this.newtons = newtons;
     }
 
-    public Force(List<Force> forces) {//TODO: using stream here.
+//    public Force(List<Force> forces) {//TODO: using stream here.
+//
+//    }
 
+    public Force(List<Vector> vectorList){
+        this.vector=new Vector((vectorList));
     }
 }

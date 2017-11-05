@@ -33,6 +33,6 @@ public class Activity_Main extends Activity {
     private boolean sendWifiMessage(){
         boolean success;
 
-        return success;
+        return true;
     }
 }
