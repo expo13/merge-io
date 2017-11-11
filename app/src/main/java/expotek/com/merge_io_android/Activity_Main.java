@@ -2,12 +2,22 @@ package expotek.com.merge_io_android;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 import expotek.com.merge_io_android.io.WifiReceiver;
 
@@ -19,13 +29,17 @@ public class Activity_Main extends Activity {
     private WifiP2pManager.Channel mChannel;
     private BroadcastReceiver mReceiver;
     private Button button_test;
+    Context context = this.getApplicationContext();
+    String host;
+    int port;
+    int len;
+    Socket socket = new Socket();
+    byte buf[]  = new byte[1024];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        initializeWifi();
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
@@ -35,6 +49,7 @@ public class Activity_Main extends Activity {
 
         button_test = (Button) findViewById(R.id.activity_main_button_test);
 
+        initializeWifi();
     }
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
@@ -56,7 +71,7 @@ public class Activity_Main extends Activity {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-
+                Log.i("discoverPeers", "FOUND PEERS!");
             }
 
             @Override
@@ -86,4 +101,47 @@ public class Activity_Main extends Activity {
         super.onPause();
         unregisterReceiver(mReceiver);
     }
+
+    private void getMessage() {
+
+        try {
+            /**
+             * Create a client socket with the host,
+             * port, and timeout information.
+             */
+            socket.bind(null);
+            socket.connect((new InetSocketAddress(host, port)), 500);
+
+            /**
+             * Create a byte stream from a JPEG file and pipe it to the output stream
+             * of the socket. This data will be retrieved by the server device.
+             */
+            OutputStream outputStream = socket.getOutputStream();
+            ContentResolver cr = context.getContentResolver();
+            InputStream inputStream = null;
+            inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
+            while ((len = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            //catch logic
+        } catch (IOException e) {
+            //catch logic
+        }
+        finally {
+            if (socket != null) {
+                if (socket.isConnected()) {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        //catch logic
+                    }
+                }
+            }
+        }
+    }
+
 }
+

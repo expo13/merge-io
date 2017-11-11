@@ -67,7 +67,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
                 @Override
                 public void onSuccess() {
-                    //success logic
+                    Log.i("Connect", "Connection!");
                 }
 
                 @Override
