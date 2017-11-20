@@ -23,6 +23,7 @@ public class WifiReceiver extends BroadcastReceiver {
     private Channel channel;
     private Activity activity;
     private PeerListListener myPeerListListener;
+    private final String macAddress = "b8:e8:56:32:5f:30";
 
     WifiP2pDevice device;
     WifiP2pConfig config = new WifiP2pConfig();
@@ -32,8 +33,7 @@ public class WifiReceiver extends BroadcastReceiver {
      * @param channel Wifi p2p channel
      * @param activity activity associated with the receiver
      */
-    public WifiReceiver(WifiP2pManager manager, Channel channel,
-                                       Activity activity) {
+    public WifiReceiver(WifiP2pManager manager, Channel channel, Activity activity) {
         super();
         this.manager = manager;
         this.channel = channel;
@@ -49,6 +49,7 @@ public class WifiReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
+
             // Check to see if Wi-Fi is enabled and notify appropriate activity
 
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
@@ -62,7 +63,10 @@ public class WifiReceiver extends BroadcastReceiver {
                 manager.requestPeers(channel, myPeerListListener);
             }
 
+            device.deviceAddress=macAddress;
+            device.deviceName="Craig's Phone";
             config.deviceAddress = device.deviceAddress;
+
             manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
                 @Override

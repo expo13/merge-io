@@ -11,13 +11,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 import expotek.com.merge_io_android.io.WifiReceiver;
 
@@ -57,7 +60,7 @@ public class Activity_Main extends Activity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.activity_main_button_test:
-                    sendWifiMessage();
+                    printToast();
                 break;
             }
         }
@@ -79,13 +82,10 @@ public class Activity_Main extends Activity {
 
             }
         });
-
     }
 
-    private boolean sendWifiMessage(){
-        boolean success;
-
-        return true;
+    private void printToast(){
+        Toast.makeText(this, getMessage(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -102,13 +102,14 @@ public class Activity_Main extends Activity {
         unregisterReceiver(mReceiver);
     }
 
-    private void getMessage() {
+    private String getMessage() {
 
         try {
             /**
              * Create a client socket with the host,
              * port, and timeout information.
              */
+            port = 8080;
             socket.bind(null);
             socket.connect((new InetSocketAddress(host, port)), 500);
 
@@ -119,7 +120,8 @@ public class Activity_Main extends Activity {
             OutputStream outputStream = socket.getOutputStream();
             ContentResolver cr = context.getContentResolver();
             InputStream inputStream = null;
-            inputStream = cr.openInputStream(Uri.parse("path/to/picture.jpg"));
+            String s = "Hello Server!";
+            inputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8.name()));
             while ((len = inputStream.read(buf)) != -1) {
                 outputStream.write(buf, 0, len);
             }
@@ -141,7 +143,10 @@ public class Activity_Main extends Activity {
                 }
             }
         }
+        return "Some Sort of Success";
     }
+
+
 
 }
 
