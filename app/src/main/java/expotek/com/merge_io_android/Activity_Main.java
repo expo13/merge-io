@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,7 +22,10 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
+import expotek.com.merge_io_android.io.RetrieveTestOutput;
 import expotek.com.merge_io_android.io.WifiReceiver;
 
 
@@ -32,12 +36,7 @@ public class Activity_Main extends Activity {
     private WifiP2pManager.Channel mChannel;
     private BroadcastReceiver mReceiver;
     private Button button_test;
-    Context context = this.getApplicationContext();
-    String host;
-    int port;
-    int len;
-    Socket socket = new Socket();
-    byte buf[]  = new byte[1024];
+    private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +50,7 @@ public class Activity_Main extends Activity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
 
         button_test = (Button) findViewById(R.id.activity_main_button_test);
+        button_test.setOnClickListener(clickListener);
 
         initializeWifi();
     }
@@ -60,7 +60,8 @@ public class Activity_Main extends Activity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.activity_main_button_test:
-                    printToast();
+                    Log.d("Activity Miain", "Button has been clicked");
+                    clickButton();
                 break;
             }
         }
@@ -74,7 +75,7 @@ public class Activity_Main extends Activity {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.i("discoverPeers", "FOUND PEERS!");
+                Log.d("discoverPeers", "FOUND PEERS!");
             }
 
             @Override
@@ -83,9 +84,12 @@ public class Activity_Main extends Activity {
             }
         });
     }
+    private void clickButton(){
+        new RetrieveTestOutput(this).execute();
+    }
 
     private void printToast(){
-        Toast.makeText(this, getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Toast!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -101,52 +105,6 @@ public class Activity_Main extends Activity {
         super.onPause();
         unregisterReceiver(mReceiver);
     }
-
-    private String getMessage() {
-
-        try {
-            /**
-             * Create a client socket with the host,
-             * port, and timeout information.
-             */
-            port = 8080;
-            socket.bind(null);
-            socket.connect((new InetSocketAddress(host, port)), 500);
-
-            /**
-             * Create a byte stream from a JPEG file and pipe it to the output stream
-             * of the socket. This data will be retrieved by the server device.
-             */
-            OutputStream outputStream = socket.getOutputStream();
-            ContentResolver cr = context.getContentResolver();
-            InputStream inputStream = null;
-            String s = "Hello Server!";
-            inputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8.name()));
-            while ((len = inputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, len);
-            }
-            outputStream.close();
-            inputStream.close();
-        } catch (FileNotFoundException e) {
-            //catch logic
-        } catch (IOException e) {
-            //catch logic
-        }
-        finally {
-            if (socket != null) {
-                if (socket.isConnected()) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        //catch logic
-                    }
-                }
-            }
-        }
-        return "Some Sort of Success";
-    }
-
-
 
 }
 

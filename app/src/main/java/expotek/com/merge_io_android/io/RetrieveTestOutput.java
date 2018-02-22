@@ -1,5 +1,6 @@
 package expotek.com.merge_io_android.io;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,73 +10,84 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class RetrieveTestOutput extends AsyncTask {
 
     private Context context;
     private TextView statusText;
 
-    public RetrieveTestOutput(Context context, View statusText) {
+    String host;
+    int port;
+    int len;
+    Socket socket = new Socket();
+    byte buf[]  = new byte[1024];
+
+
+    public RetrieveTestOutput(Context context) {
         this.context = context;
-        this.statusText = (TextView) statusText;
+
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
-        return null;
+    protected String doInBackground(Object[] objects) {
+        return getMessage();
     }
 
-//    @Override
-//    protected String doInBackground(Object[]... params) {
-//        try {
-//
-//            /**
-//             * Create a server socket and wait for client connections. This
-//             * call blocks until a connection is accepted from a client
-//             */
-//            ServerSocket serverSocket = new ServerSocket(8888);
-//            Socket client = serverSocket.accept();
-//
-//            /**
-//             * If this code is reached, a client has connected and transferred data
-//             * Save the input stream from the client as a JPEG file
-//             */
-//            final File f = new File(Environment.getExternalStorageDirectory() + "/"
-//                    + context.getPackageName() + "/wifip2pshared-" + System.currentTimeMillis()
-//                    + ".jpg");
-//
-//            File dirs = new File(f.getParent());
-//            if (!dirs.exists())
-//                dirs.mkdirs();
-//            f.createNewFile();
-//            InputStream inputstream = client.getInputStream();
-//            copyFile(inputstream, new FileOutputStream(f));
-//            serverSocket.close();
-//            return f.getAbsolutePath();
-//        } catch (IOException e) {
-//            Log.e(WiFiDirectActivity.TAG, e.getMessage());
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Start activity that can handle the JPEG image
-//     */
-//    @Override
-//    protected void onPostExecute(String result) {
-//        if (result != null) {
-//            statusText.setText("File copied - " + result);
-//            Intent intent = new Intent();
-//            intent.setAction(android.content.Intent.ACTION_VIEW);
-//            intent.setDataAndType(Uri.parse("file://" + result), "image/*");
-//            context.startActivity(intent);
-//        }
-//    }
+    private String getMessage() {
 
+        try {
+            /**
+             * Create a client socket with the host,
+             * port, and timeout information.
+             */
+            Log.d("getMessage","TRYING");
+            port = 8080;
+            host = "b8:e8:56:32:5f:30";
+            socket.bind(null);
+            socket.connect((new InetSocketAddress(host, port)), 500);
+
+            /**
+             * Create a byte stream from a JPEG file and pipe it to the output stream
+             * of the socket. This data will be retrieved by the server device.
+             */
+            OutputStream outputStream = socket.getOutputStream();
+            ContentResolver cr = context.getContentResolver();
+            InputStream inputStream = null;
+            String s = "Hello Server!";
+            inputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8.name()));
+            while ((len = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.close();
+            inputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if (socket != null) {
+                if (socket.isConnected()) {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        //catch logic
+                    }
+                }
+            }
+        }
+        Log.d("async task", "We've returned a message!");
+        return "Some Sort of Success";
+    }
 }
