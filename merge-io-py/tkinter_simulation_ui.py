@@ -10,7 +10,7 @@ class Application(tk.Frame):
         for t in range(7):
             time.sleep(2)
             if t%3==0 and t > 0:
-                self.car_1.brake(-5,100)
+                self.car_1.brake(-5,200)
                 continue
             self.car_1.give_it_gas(-5,100)
 
@@ -24,12 +24,12 @@ class Application(tk.Frame):
         t2.join
     def animation(self):
         for x in range(0, 1000):
-            dy = self.car_1.velocity
-            dx = 0
-            self.canvas.move(self.car_image, dx, dy)
+#            dy = self.car_1.velocity
+            #dx = 0
+            self.canvas.move(self.car_image, 0, self.car_1.velocity)
             self.canvas.update()
             time.sleep(.01)
-            if x % 50 == 0 :
+            if x % 100 == 0 :
                 print('Car at ' + str(self.car_1.velocity))
 
     def __init__(self, master=None):
