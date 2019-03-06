@@ -3,6 +3,7 @@ from tkinter import Canvas, Frame, BOTH, PhotoImage, Label
 from car import car
 import threading
 import time
+import configparser
 
 class Application(tk.Frame):
 
@@ -13,7 +14,6 @@ class Application(tk.Frame):
                 self.car_1.brake(-5,200)
                 continue
             self.car_1.give_it_gas(-5,100)
-
     def simulation(self):
         t2 = threading.Thread(target=self.gas)
         time.sleep(2)
@@ -27,7 +27,6 @@ class Application(tk.Frame):
             time.sleep(.01)
             if x % 100 == 0 :
                 print('Car at ' + str(self.car_1.velocity))
-
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -36,7 +35,6 @@ class Application(tk.Frame):
         self.car_image = 0
         self.canvas = self.create_widgets()
         self.simulation()
-
     def create_widgets(self):
         self.start = tk.Button(self, text="START", fg="green",
                                command=self.animation)
@@ -57,7 +55,13 @@ class Application(tk.Frame):
         canvas.pack(fill=BOTH, expand=1)
         return canvas
 
-root = tk.Tk()
-car_image = 0
-app = Application(master=root)
-app.mainloop()
+##Initation
+config = configparser.ConfigParser()
+config.read('simulation_params1.ini')
+
+initial_velocity = config['DEFAULT']['starting_velocity']
+print(initial_velocity)
+#root = tk.Tk()
+#car_image = 0
+#app = Application(master=root)
+#app.mainloop()

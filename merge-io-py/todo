@@ -1,5 +1,5 @@
 ESSENTIAL BY PRIORITY
-- define parameters of simulation
+- integrate parameters into physical world of simulation
 - creat block object
 - create one simulation
 - create 'random simulation'
