@@ -1,0 +1,8 @@
+ESSENTIAL BY PRIORITY
+- define parameters of simulation
+- creat block object
+- create one simulation
+- create 'random simulation'
+
+NONESSENTIAL BY PRIORITY
+-seperate out ui/animation from 'simulated world'
