@@ -16,16 +16,12 @@ class Application(tk.Frame):
 
     def simulation(self):
         t2 = threading.Thread(target=self.gas)
-#        t1 = threading.Thread(target=self.animation)
-#        t1.start()
         time.sleep(2)
         t2.start()
         self.animation()
         t2.join
     def animation(self):
         for x in range(0, 1000):
-#            dy = self.car_1.velocity
-            #dx = 0
             self.canvas.move(self.car_image, 0, self.car_1.velocity)
             self.canvas.update()
             time.sleep(.01)
