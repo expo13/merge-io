@@ -59,9 +59,8 @@ class Application(tk.Frame):
 config = configparser.ConfigParser()
 config.read('simulation_params1.ini')
 
-initial_velocity = config['DEFAULT']['starting_velocity']
-print(initial_velocity)
-#root = tk.Tk()
-#car_image = 0
-#app = Application(master=root)
-#app.mainloop()
+#initial_velocity = config['DEFAULT']['starting_velocity']
+root = tk.Tk()
+car_image = 0
+app = Application(master=root)
+app.mainloop()
