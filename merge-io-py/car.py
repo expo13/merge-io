@@ -17,5 +17,6 @@ class car:
         print('Giving it gas! '+str(time)+'s @'+str(throttle_percentage)+'%')
         self.accelerate((self.max_force * throttle_percentage / 100) , time)
 
-    def brake():
-        print('Braking...')
+    def brake(self, time, brake_percentage):
+        print('Hittin\' da brakes!' +str(time)+'s @'+str(brake_percentage)+'%')
+        self.accelerate(-(self.max_force * brake_percentage / 100), time)

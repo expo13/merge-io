@@ -1,34 +1,43 @@
 import tkinter as tk
 from tkinter import Canvas, Frame, BOTH, PhotoImage, Label
 from car import car
+import threading
 import time
 
 class Application(tk.Frame):
 
-    def simulation():
-        t2 = threading.Thread(target=gas)
-        t1 = threading.Thread(target=animation)
-        t1.start()
-        time.sleep(1)
+    def gas(self):
+        for t in range(7):
+            time.sleep(2)
+            if t%3==0 and t > 0:
+                self.car_1.brake(-5,100)
+                continue
+            self.car_1.give_it_gas(-5,100)
+
+    def simulation(self):
+        t2 = threading.Thread(target=self.gas)
+#        t1 = threading.Thread(target=self.animation)
+#        t1.start()
+        time.sleep(2)
         t2.start()
-
-    def gas():
-        time.sleep(4)
-        self.car_1.give_it_gas(10,100)
-
+        self.animation()
+        t2.join
     def animation(self):
         for x in range(0, 1000):
-            dy = car_1.velocity
+            dy = self.car_1.velocity
             dx = 0
-            self.canvas.move(self.car_1, dx, dy)
+            self.canvas.move(self.car_image, dx, dy)
             self.canvas.update()
             time.sleep(.01)
+            if x % 50 == 0 :
+                print('Car at ' + str(self.car_1.velocity))
 
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
         self.pack()
-        self.car_1 = None
+        self.car_1 = car()
+        self.car_image = 0
         self.canvas = self.create_widgets()
         self.simulation()
 
@@ -46,13 +55,13 @@ class Application(tk.Frame):
             outline="#fff", fill="#222")
         canvas.create_line(500, 0, 500, 750, dash=(4, 2), fill="#ff0")
         gif1 = PhotoImage(file = '/Users/ccolquitt/repos/expo/merge-io/merge-io-py/car.gif')
-        self.car_1 = canvas.create_image(525,700,image = gif1)
+        self.car_image = canvas.create_image(525,700,image = gif1)
         label = Label(image=gif1)
         label.image = gif1
         canvas.pack(fill=BOTH, expand=1)
         return canvas
 
 root = tk.Tk()
-car_1 = car()
+car_image = 0
 app = Application(master=root)
 app.mainloop()
