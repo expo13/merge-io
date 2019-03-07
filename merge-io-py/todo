@@ -1,3 +1,5 @@
+0.1 - Simple Learning to Stop if Object present (no time feature)
+
 ESSENTIAL BY PRIORITY
 - integrate parameters into physical world of simulation
 - creat block object
@@ -6,3 +8,5 @@ ESSENTIAL BY PRIORITY
 
 NONESSENTIAL BY PRIORITY
 -seperate out ui/animation from 'simulated world'
+
+1.0 - (or 0.2) - adding Time feature (time as a matrix)

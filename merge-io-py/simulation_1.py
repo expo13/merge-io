@@ -1,30 +1,29 @@
 from car import car
 import threading
 import time
-car_1 = car()
+import configparser
+#we have a car, set an initial (variable) velocity, set the (variable) position of the object.
 
-def simulation() :
-    for x in range(0,30):
-        time.sleep(1)
-        print(str(car_1.velocity))
+#create world time loop.
 
-def gas() :
-    time.sleep(4)
-    car_1.give_it_gas(5,100)
+config = configparser.ConfigParser()
+config.read('simulation_params1.ini')
+max_int_starting_velocity = int(config['DEFAULT']['max_int_starting_velocity'])
+road_length = int(config['DEFAULT']['simulation_road_length'])
 
-t1 = threading.Thread(target=simulation)
-t2 = threading.Thread(target=gas)
+def generate_pseudo_random_block_position() :
+    scalar = random.randint(5,15)*.1
+    return road_length*scalar
 
-    # starting thread 1
-t1.start()
-time.sleep(1)
-    # starting thread 2
-t2.start()
+def generate_pseudo_random_starting_velocity() :
+    return random.randint(1,max_int_starting_velocity)
 
-    # wait until thread 1 is completely executed
-t1.join()
-    # wait until thread 2 is completely executed
-t2.join()
+def generate_random_braking() :
+    return random.randint(1,15)
 
-# both threads completely executed
-print("Done!")
+car = car()
+car.velocity = generatePsuedoRandomStartingVelocity()
+block_point = generate_pseudo_random_block_position()
+braking_action = generate_random_braking()
+
+
