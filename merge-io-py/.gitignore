@@ -5,3 +5,6 @@
 *.pyc
 .DS_Store
 __pycache__/
+
+#general
+*.log

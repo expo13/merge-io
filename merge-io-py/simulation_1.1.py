@@ -39,7 +39,7 @@ data_file = os.path.join(dirname, 'data_run_1.log')
 count_of_accidents = 0
 count_of_nonaccidents = 0
 #TODO parameterize data quantity
-for x in range(10):
+for x in range(1000):
 
     car.velocity = generate_pseudo_random_starting_velocity()
     starting_velocity = car.velocity
