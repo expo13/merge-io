@@ -30,12 +30,12 @@ train_labels = np.array(train_labels)
 train_data = np.array(train_data)
 
 model = keras.Sequential([
-    keras.layers.Dense(4, activation=tf.nn.relu),
-    keras.layers.Dense(5, activation=tf.nn.softmax)
+    keras.layers.Dense(2, activation=tf.nn.relu),
+    keras.layers.Dense(2, activation=tf.nn.softmax)
 ])
 
 model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
+              loss='mean_squared_error',
               metrics=['accuracy'])
 
 model.fit(train_data, train_labels, epochs=5)
