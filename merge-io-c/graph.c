@@ -25,5 +25,14 @@ struct Graph createGraph(struct Edge edges[], int n) {
 	for (i = 0; i < N; i++) 
 		graph->head[i] = NULL;
 	
-	for (
+	for (i = 0; i < n; i++) 
+	{
+		int src = edges[i].src;
+		int dest = edges[i].dest;
+
+		struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+		newNode->next = graph->head[src];
+
+
+	}
 }
